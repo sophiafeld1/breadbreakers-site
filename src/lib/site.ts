@@ -14,4 +14,6 @@ export const links = {
   facebook: "https://www.facebook.com/profile.php?id=61564660176717",
   meetup: "https://www.meetup.com/breadbreakers/",
   email: "mailto:breadbreakersinfo@gmail.com",
+  donate:
+    "https://pushpay.com/g/restorationrestonumc?fnd=pO6G-N7oO7FH7Mp1u-x6mA&fndv=Lock&r=No&lang=en&src=pcgl",
 };
