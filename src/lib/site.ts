@@ -9,6 +9,21 @@ export const images = {
   meetupLogo: "/meetup-logo.png",
 };
 
+export const aboutSlideshowImages = [
+  {
+    src: "/PXL_20250924_002502105.jpg",
+    alt: "Ground rules sign at a BreadBreakers gathering",
+  },
+  {
+    src: "/PXL_20251217_010925824.jpg",
+    alt: "Community members sharing a meal together",
+  },
+  {
+    src: "/about-mission.jpg",
+    alt: "People gathered for a BreadBreakers event",
+  },
+] as const;
+
 export const links = {
   restorationChurch: "https://restorationreston.org/",
   facebook: "https://www.facebook.com/profile.php?id=61564660176717",

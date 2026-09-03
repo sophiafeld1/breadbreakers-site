@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { images } from "@/lib/site";
+import ImageSlideshow from "@/components/ImageSlideshow";
+import { aboutSlideshowImages } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Our Mission | BreadBreakers",
@@ -53,17 +53,12 @@ export default function AboutUsPage() {
       </section>
 
       <section className="bg-brand px-6 pb-16 md:pb-20">
-        <div className="mx-auto grid max-w-5xl items-start gap-10 md:grid-cols-3 md:gap-12">
-          <div className="relative aspect-[3/4] w-full max-w-sm overflow-hidden md:col-span-1">
-            <Image
-              src={images.aboutMissionPhoto}
-              alt="BreadBreakers community gathering"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
-            />
-          </div>
-          <div className="text-cream md:col-span-2">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-14">
+          <ImageSlideshow
+            images={[...aboutSlideshowImages]}
+            className="aspect-[3/4] w-full md:min-h-[480px]"
+          />
+          <div className="text-cream">
             <h2 className="text-lg font-semibold leading-relaxed md:text-xl">
               Our Vision: To ignite a movement of compassion that brings new
               wholeness to our communities and discourse.
