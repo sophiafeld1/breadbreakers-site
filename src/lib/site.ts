@@ -17,3 +17,8 @@ export const links = {
   donate:
     "https://pushpay.com/g/restorationrestonumc?fnd=pO6G-N7oO7FH7Mp1u-x6mA&fndv=Lock&r=No&lang=en&src=pcgl",
 };
+
+export function donateUrl(amount?: number): string {
+  if (!amount) return links.donate;
+  return `${links.donate}&a=${amount}`;
+}
