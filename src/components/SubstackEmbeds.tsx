@@ -1,7 +1,5 @@
-"use client";
-
-import Script from "next/script";
 import type { SubstackPost } from "@/lib/substack";
+import SubstackPostEmbed from "@/components/SubstackPostEmbed";
 
 type SubstackEmbedsProps = {
   posts: SubstackPost[];
@@ -12,36 +10,31 @@ export default function SubstackEmbeds({
   posts,
   layout = "stack",
 }: SubstackEmbedsProps) {
-  const containerClass =
-    layout === "grid"
-      ? "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8"
-      : "space-y-8";
-
-  const itemClass =
-    layout === "grid"
-      ? "overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brown/10"
-      : "";
-
-  return (
-    <>
-      <div className={containerClass}>
+  if (layout === "grid") {
+    return (
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
         {posts.map((post) => (
-          <div key={post.url} className={itemClass}>
-            <div className="substack-post-embed substack-post-embed--fit">
-              <p lang="en">{post.title}</p>
-              <p>{post.description}</p>
-              <a data-post-link href={post.url}>
-                Read on Substack
-              </a>
-            </div>
+          <div
+            key={post.url}
+            className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brown/10"
+          >
+            <SubstackPostEmbed post={post} />
           </div>
         ))}
       </div>
-      <Script
-        src="https://substack.com/embedjs/embed.js"
-        strategy="lazyOnload"
-        charSet="utf-8"
-      />
-    </>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-xl space-y-8">
+      {posts.map((post) => (
+        <div
+          key={post.url}
+          className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brown/10"
+        >
+          <SubstackPostEmbed post={post} />
+        </div>
+      ))}
+    </div>
   );
 }

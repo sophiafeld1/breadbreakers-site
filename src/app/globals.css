@@ -262,16 +262,3 @@
 .hyo-cta a:hover {
   background: #a8461f;
 }
-
-/* Substack embed cards */
-.substack-post-embed--fit {
-  display: block;
-  min-height: 0;
-}
-
-.substack-post-embed--fit iframe {
-  display: block;
-  width: 100% !important;
-  max-width: 100%;
-  margin: 0 !important;
-}
