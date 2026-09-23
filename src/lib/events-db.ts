@@ -108,6 +108,11 @@ export async function getEventWithRsvps(slug: string) {
           lastName: true,
           email: true,
           guestCount: true,
+          phone: true,
+          dietaryNotes: true,
+          firstTime: true,
+          hearAbout: true,
+          mailingList: true,
           createdAt: true,
         },
       },
@@ -197,6 +202,11 @@ export async function createRsvp(input: {
   lastName: string;
   email: string;
   guestCount: number;
+  phone?: string;
+  dietaryNotes?: string;
+  firstTime?: string;
+  hearAbout?: string;
+  mailingList?: boolean;
 }) {
   const event = await getEventBySlugFromDb(input.eventSlug);
 
@@ -204,13 +214,20 @@ export async function createRsvp(input: {
     return null;
   }
 
-  return prisma.rsvp.create({
+  const rsvp = await prisma.rsvp.create({
     data: {
       eventId: event.id,
       firstName: input.firstName.trim(),
       lastName: input.lastName.trim(),
       email: input.email.trim(),
       guestCount: input.guestCount,
+      phone: input.phone?.trim() || null,
+      dietaryNotes: input.dietaryNotes?.trim() || null,
+      firstTime: input.firstTime?.trim() || null,
+      hearAbout: input.hearAbout?.trim() || null,
+      mailingList: Boolean(input.mailingList),
     },
   });
+
+  return { rsvp, event };
 }

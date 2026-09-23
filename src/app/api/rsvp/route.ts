@@ -1,54 +1,17 @@
 import { NextResponse } from "next/server";
-import { createRsvp, rsvpHeadcount } from "@/lib/events-db";
-
-type RsvpPayload = {
-  eventTitle: string;
-  eventSlug: string;
-  formName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  guestCount?: number;
-  phone?: string;
-  dietaryNotes?: string;
-  firstTime?: string;
-  hearAbout?: string;
-  mailingList?: boolean;
-};
-
-function formatRsvpEmail(payload: RsvpPayload, headcount: number): string {
-  const guestCount = payload.guestCount ?? 0;
-  const lines = [
-    `New RSVP for ${payload.eventTitle}`,
-    `Form: ${payload.formName}`,
-    `Event slug: ${payload.eventSlug}`,
-    "",
-    `Name: ${payload.firstName} ${payload.lastName}`.trim(),
-    `Email: ${payload.email}`,
-    `Guests bringing: ${guestCount}`,
-    `Headcount from this RSVP: ${headcount}`,
-  ];
-
-  if (payload.phone) lines.push(`Phone: ${payload.phone}`);
-  if (payload.dietaryNotes) {
-    lines.push(`Dietary/Accessibility Notes: ${payload.dietaryNotes}`);
-  }
-  if (payload.firstTime) {
-    lines.push(`First BreadBreakers event: ${payload.firstTime}`);
-  }
-  if (payload.hearAbout) {
-    lines.push(`How they heard about us: ${payload.hearAbout}`);
-  }
-  lines.push(`Mailing list opt-in: ${payload.mailingList ? "Yes" : "No"}`);
-
-  return lines.join("\n");
-}
+import { createRsvp } from "@/lib/events-db";
+import { getPostmarkConfig, sendPostmarkEmail } from "@/lib/postmark";
+import {
+  buildAdminRsvpEmail,
+  buildAttendeeRsvpEmail,
+  type RsvpSubmission,
+} from "@/lib/rsvp-email";
 
 export async function POST(request: Request) {
-  let payload: RsvpPayload;
+  let payload: RsvpSubmission;
 
   try {
-    payload = (await request.json()) as RsvpPayload;
+    payload = (await request.json()) as RsvpSubmission;
   } catch {
     return NextResponse.json(
       { success: false, message: "Invalid form data." },
@@ -63,24 +26,37 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!payload.eventSlug?.trim()) {
+    return NextResponse.json(
+      { success: false, message: "This event could not be found." },
+      { status: 400 },
+    );
+  }
+
   const guestCount = Math.max(0, Number(payload.guestCount) || 0);
-  const headcount = rsvpHeadcount(guestCount);
+  const submission: RsvpSubmission = {
+    ...payload,
+    firstName: payload.firstName.trim(),
+    lastName: payload.lastName?.trim() ?? "",
+    email: payload.email.trim(),
+    guestCount,
+  };
+
+  let result;
 
   try {
-    const rsvp = await createRsvp({
-      eventSlug: payload.eventSlug,
-      firstName: payload.firstName,
-      lastName: payload.lastName ?? "",
-      email: payload.email,
-      guestCount,
+    result = await createRsvp({
+      eventSlug: submission.eventSlug,
+      firstName: submission.firstName,
+      lastName: submission.lastName,
+      email: submission.email,
+      guestCount: submission.guestCount,
+      phone: submission.phone,
+      dietaryNotes: submission.dietaryNotes,
+      firstTime: submission.firstTime,
+      hearAbout: submission.hearAbout,
+      mailingList: submission.mailingList,
     });
-
-    if (!rsvp) {
-      return NextResponse.json(
-        { success: false, message: "This event could not be found." },
-        { status: 404 },
-      );
-    }
   } catch (error) {
     console.error("RSVP save error:", error);
 
@@ -93,38 +69,41 @@ export async function POST(request: Request) {
     );
   }
 
-  const token = process.env.POSTMARK_SERVER_TOKEN;
-  const from = process.env.POSTMARK_FROM_EMAIL;
-  const to = process.env.POSTMARK_TO_EMAIL;
+  if (!result) {
+    return NextResponse.json(
+      { success: false, message: "This event could not be found." },
+      { status: 404 },
+    );
+  }
 
-  if (!token || !from || !to) {
-    console.log("RSVP received (Postmark not configured):", payload);
+  const { event } = result;
+  const postmark = getPostmarkConfig();
+
+  if (!postmark) {
+    console.log("RSVP received (Postmark not configured):", submission);
 
     return NextResponse.json({
       success: true,
       configured: false,
-      message: "Thank you!",
+      message:
+        "Thank you! Your RSVP was saved. We'll be in touch with event details soon.",
     });
   }
 
-  const response = await fetch("https://api.postmarkapp.com/email", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "X-Postmark-Server-Token": token,
-    },
-    body: JSON.stringify({
-      From: from,
-      To: to,
-      Subject: `RSVP: ${payload.eventTitle}`,
-      TextBody: formatRsvpEmail(payload, headcount),
-      ReplyTo: payload.email,
-    }),
+  const adminEmail = buildAdminRsvpEmail(submission, event);
+  const attendeeEmail = buildAttendeeRsvpEmail(submission, event);
+
+  const adminResult = await sendPostmarkEmail({
+    token: postmark.token,
+    from: postmark.from,
+    to: postmark.adminTo,
+    subject: adminEmail.subject,
+    textBody: adminEmail.textBody,
+    replyTo: submission.email,
   });
 
-  if (!response.ok) {
-    console.error("Postmark error:", await response.text());
+  if (!adminResult.ok) {
+    console.error("Postmark admin email error:", adminResult.error);
 
     return NextResponse.json(
       {
@@ -135,9 +114,33 @@ export async function POST(request: Request) {
     );
   }
 
+  const attendeeResult = await sendPostmarkEmail({
+    token: postmark.token,
+    from: postmark.from,
+    to: submission.email,
+    subject: attendeeEmail.subject,
+    textBody: attendeeEmail.textBody,
+    htmlBody: attendeeEmail.htmlBody,
+    replyTo: postmark.from,
+  });
+
+  if (!attendeeResult.ok) {
+    console.error("Postmark attendee email error:", attendeeResult.error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Your RSVP was saved, but we couldn't send your confirmation email. Please contact us if you need help.",
+      },
+      { status: 502 },
+    );
+  }
+
   return NextResponse.json({
     success: true,
     configured: true,
-    message: "Thank you!",
+    message:
+      "Thank you! Check your email for a confirmation with the event details.",
   });
 }

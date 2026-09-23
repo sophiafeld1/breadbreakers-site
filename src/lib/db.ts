@@ -1,5 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
+import { normalizeConnectionString } from "@/lib/database-url";
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -10,7 +11,9 @@ function createPrismaClient() {
     );
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  const adapter = new PrismaPg({
+    connectionString: normalizeConnectionString(connectionString),
+  });
 
   return new PrismaClient({ adapter });
 }

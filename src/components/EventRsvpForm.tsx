@@ -84,7 +84,10 @@ export default function EventRsvpForm({
       }
 
       setStatus("success");
-      setMessage(data.message ?? "Thank you!");
+      setMessage(
+        data.message ??
+          "Thank you! Check your email for a confirmation with the event details.",
+      );
       setForm(initialFormState);
     } catch (error) {
       setStatus("error");

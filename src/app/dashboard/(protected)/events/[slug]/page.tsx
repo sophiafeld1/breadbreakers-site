@@ -73,8 +73,10 @@ export default async function DashboardEventDetailPage({
                 <tr className="border-b border-brown/10 text-brown">
                   <th className="px-3 py-2 font-medium">Name</th>
                   <th className="px-3 py-2 font-medium">Email</th>
+                  <th className="px-3 py-2 font-medium">Phone</th>
                   <th className="px-3 py-2 font-medium">Guests</th>
                   <th className="px-3 py-2 font-medium">Headcount</th>
+                  <th className="px-3 py-2 font-medium">Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,9 +86,15 @@ export default async function DashboardEventDetailPage({
                       {[rsvp.firstName, rsvp.lastName].filter(Boolean).join(" ")}
                     </td>
                     <td className="px-3 py-3 text-brown">{rsvp.email}</td>
+                    <td className="px-3 py-3 text-brown">{rsvp.phone ?? "—"}</td>
                     <td className="px-3 py-3 text-brown">{rsvp.guestCount}</td>
                     <td className="px-3 py-3 font-medium text-brown-dark">
                       {rsvp.headcount}
+                    </td>
+                    <td className="max-w-xs px-3 py-3 text-brown">
+                      {[rsvp.dietaryNotes, rsvp.mailingList ? "Mailing list" : null]
+                        .filter(Boolean)
+                        .join(" · ") || "—"}
                     </td>
                   </tr>
                 ))}
