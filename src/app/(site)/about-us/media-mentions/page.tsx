@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import SubstackEmbeds from "@/components/SubstackEmbeds";
+import ArticleEmbedCard from "@/components/ArticleEmbedCard";
+import SubstackPostEmbed from "@/components/SubstackPostEmbed";
+import { ministryMattersPost } from "@/lib/media-mentions";
 import { mediaMentionPosts } from "@/lib/substack";
 
 export const metadata: Metadata = {
@@ -7,10 +9,20 @@ export const metadata: Metadata = {
 };
 
 export default function MediaMentionsPage() {
+  const substackPost = mediaMentionPosts[0];
+
   return (
     <section className="bg-sand px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-3xl space-y-12">
-        <SubstackEmbeds posts={mediaMentionPosts} />
+      <div className="mx-auto max-w-5xl space-y-12">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+          <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brown/10">
+            <SubstackPostEmbed post={substackPost} />
+          </div>
+
+          <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brown/10">
+            <ArticleEmbedCard article={ministryMattersPost} />
+          </div>
+        </div>
 
         <blockquote className="border-l-4 border-brand pl-6 text-lg leading-relaxed text-brown-dark">
           &ldquo;In my faith tradition, there&apos;s a rabbi named Jesus who was
@@ -19,18 +31,6 @@ export default function MediaMentionsPage() {
           questions and told stories. Tonight, let&apos;s embrace curiosity, ask
           questions, and learn from each other.&rdquo; — Daniel Park
         </blockquote>
-
-        <p className="text-lg text-brown-dark">
-          Read the full article here:{" "}
-          <a
-            href="https://ministrymatters.com/2025-06-06_building_bridges_one_table_at_a_time/"
-            target="_blank"
-            rel="noreferrer"
-            className="text-brand underline-offset-2 hover:underline"
-          >
-            Ministry Matters — Building bridges one table at a time
-          </a>
-        </p>
       </div>
     </section>
   );
