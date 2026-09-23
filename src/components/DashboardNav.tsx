@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth/server";
 
 const links = [
   { href: "/dashboard", label: "Overview" },
+  { href: "/dashboard/events", label: "Events", masterOnly: true },
   { href: "/dashboard/users", label: "User access", masterOnly: true },
 ] as const;
 

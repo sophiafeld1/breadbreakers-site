@@ -47,7 +47,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (pathname.startsWith("/dashboard/users") && session.role !== "master") {
+  if (
+    (pathname.startsWith("/dashboard/users") ||
+      pathname.startsWith("/dashboard/events")) &&
+    session.role !== "master"
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

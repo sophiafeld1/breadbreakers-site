@@ -1,17 +1,16 @@
-import { getEventBySlug } from "@/lib/events";
 import { NextResponse } from "next/server";
+import { getPublicEventBySlug } from "@/lib/events-db";
+import type { Event } from "@/lib/events";
 
-const eventTimes: Record<string, { start: string; end: string }> = {
-  "july-30-2026": { start: "20260730T223000Z", end: "20260731T003000Z" },
-  "june-24-2026": { start: "20260624T223000Z", end: "20260625T003000Z" },
-  "may-28-2026": { start: "20260528T223000Z", end: "20260529T003000Z" },
-};
+function buildIcs(event: Event) {
+  if (!event.calendarStart || !event.calendarEnd) {
+    return null;
+  }
 
-function buildIcs(event: NonNullable<ReturnType<typeof getEventBySlug>>) {
-  const times = eventTimes[event.slug];
   const location = event.location ?? "";
   const uid = `${event.slug}@breadbreakerscommunity.org`;
-  const timestamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const timestamp =
+    new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
   return [
     "BEGIN:VCALENDAR",
@@ -22,8 +21,8 @@ function buildIcs(event: NonNullable<ReturnType<typeof getEventBySlug>>) {
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${timestamp}`,
-    `DTSTART:${times.start}`,
-    `DTEND:${times.end}`,
+    `DTSTART:${event.calendarStart}`,
+    `DTEND:${event.calendarEnd}`,
     `SUMMARY:${event.title}`,
     location ? `LOCATION:${location}` : "",
     "END:VEVENT",
@@ -38,13 +37,20 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const event = getEventBySlug(slug);
+  const event = await getPublicEventBySlug(slug);
 
-  if (!event || !eventTimes[slug]) {
+  if (!event) {
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   }
 
   const ics = buildIcs(event);
+
+  if (!ics) {
+    return NextResponse.json(
+      { error: "Calendar file not available for this event" },
+      { status: 404 },
+    );
+  }
 
   return new NextResponse(ics, {
     headers: {

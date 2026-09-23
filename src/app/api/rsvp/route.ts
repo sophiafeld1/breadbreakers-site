@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createRsvp, rsvpHeadcount } from "@/lib/events-db";
 
 type RsvpPayload = {
   eventTitle: string;
@@ -7,6 +8,7 @@ type RsvpPayload = {
   firstName: string;
   lastName: string;
   email: string;
+  guestCount?: number;
   phone?: string;
   dietaryNotes?: string;
   firstTime?: string;
@@ -14,7 +16,8 @@ type RsvpPayload = {
   mailingList?: boolean;
 };
 
-function formatRsvpEmail(payload: RsvpPayload): string {
+function formatRsvpEmail(payload: RsvpPayload, headcount: number): string {
+  const guestCount = payload.guestCount ?? 0;
   const lines = [
     `New RSVP for ${payload.eventTitle}`,
     `Form: ${payload.formName}`,
@@ -22,6 +25,8 @@ function formatRsvpEmail(payload: RsvpPayload): string {
     "",
     `Name: ${payload.firstName} ${payload.lastName}`.trim(),
     `Email: ${payload.email}`,
+    `Guests bringing: ${guestCount}`,
+    `Headcount from this RSVP: ${headcount}`,
   ];
 
   if (payload.phone) lines.push(`Phone: ${payload.phone}`);
@@ -58,6 +63,36 @@ export async function POST(request: Request) {
     );
   }
 
+  const guestCount = Math.max(0, Number(payload.guestCount) || 0);
+  const headcount = rsvpHeadcount(guestCount);
+
+  try {
+    const rsvp = await createRsvp({
+      eventSlug: payload.eventSlug,
+      firstName: payload.firstName,
+      lastName: payload.lastName ?? "",
+      email: payload.email,
+      guestCount,
+    });
+
+    if (!rsvp) {
+      return NextResponse.json(
+        { success: false, message: "This event could not be found." },
+        { status: 404 },
+      );
+    }
+  } catch (error) {
+    console.error("RSVP save error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unable to submit form. Please try again later.",
+      },
+      { status: 500 },
+    );
+  }
+
   const token = process.env.POSTMARK_SERVER_TOKEN;
   const from = process.env.POSTMARK_FROM_EMAIL;
   const to = process.env.POSTMARK_TO_EMAIL;
@@ -83,7 +118,7 @@ export async function POST(request: Request) {
       From: from,
       To: to,
       Subject: `RSVP: ${payload.eventTitle}`,
-      TextBody: formatRsvpEmail(payload),
+      TextBody: formatRsvpEmail(payload, headcount),
       ReplyTo: payload.email,
     }),
   });

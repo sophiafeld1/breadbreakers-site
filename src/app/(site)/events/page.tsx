@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import EventCard from "@/components/EventCard";
-import { events } from "@/lib/events";
+import { listPublicEvents } from "@/lib/events-db";
 
 export const metadata: Metadata = {
   title: "Events | BreadBreakers",
   description: "Upcoming BreadBreakers community dinners in Reston, VA.",
 };
 
-export default function EventsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function EventsPage() {
+  const events = await listPublicEvents("Reston");
   const upcomingEvents = events.filter((event) => event.isUpcoming);
   const pastEvents = events.filter((event) => !event.isUpcoming);
 
@@ -23,9 +26,15 @@ export default function EventsPage() {
 
       <section className="bg-sand px-6 py-16 md:py-20">
         <div className="mx-auto max-w-5xl space-y-12">
-          {upcomingEvents.map((event) => (
-            <EventCard key={event.slug} event={event} />
-          ))}
+          {upcomingEvents.length === 0 ? (
+            <p className="text-center text-brown-dark">
+              No upcoming events right now. Check back soon.
+            </p>
+          ) : (
+            upcomingEvents.map((event) => (
+              <EventCard key={event.slug} event={event} />
+            ))
+          )}
 
           {pastEvents.length > 0 && (
             <>

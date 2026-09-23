@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireMasterSession } from "@/lib/auth/server";
 import {
   createDashboardUser,
-  listDashboardUsers,
+  listDashboardUsersForMaster,
   MASTER_USERNAME,
 } from "@/lib/auth/users";
 
@@ -14,7 +14,7 @@ type CreateUserPayload = {
 export async function GET() {
   try {
     await requireMasterSession();
-    const users = await listDashboardUsers();
+    const users = await listDashboardUsersForMaster();
 
     return NextResponse.json({ users });
   } catch (error) {

@@ -2,11 +2,13 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import PasswordInput from "@/components/PasswordInput";
+import StoredPasswordCell from "@/components/StoredPasswordCell";
 
 type DashboardUser = {
   id: string;
   username: string;
   role: "MASTER" | "USER";
+  password: string | null;
 };
 
 export default function UserAccessManager() {
@@ -114,8 +116,8 @@ export default function UserAccessManager() {
       <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brown/10">
         <h2 className="text-lg font-semibold text-brown-dark">Add user</h2>
         <p className="mt-1 text-sm text-brown">
-          Create dashboard access for a team member. Passwords are stored
-          securely and cannot be viewed after creation.
+          Create dashboard access for a team member. Master access can view
+          saved passwords below if someone forgets theirs.
         </p>
 
         <form onSubmit={handleAddUser} className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -182,6 +184,9 @@ export default function UserAccessManager() {
         <h2 className="text-lg font-semibold text-brown-dark">
           Dashboard users
         </h2>
+        <p className="mt-1 text-sm text-brown">
+          Master access only. Click the eye icon to reveal a saved password.
+        </p>
 
         {loading ? (
           <p className="mt-4 text-sm text-brown">Loading users…</p>
@@ -190,30 +195,46 @@ export default function UserAccessManager() {
         ) : (
           <ul className="mt-4 divide-y divide-brown/10">
             {users.map((user) => (
-              <li
-                key={user.id}
-                className="flex items-center justify-between gap-4 py-3"
-              >
-                <div>
-                  <p className="font-medium text-brown-dark">{user.username}</p>
-                  <p className="text-sm text-brown">
-                    {user.role === "MASTER" ? "Master access" : "Standard access"}
-                  </p>
-                </div>
+              <li key={user.id} className="py-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1 space-y-3">
+                    <div>
+                      <p className="font-medium text-brown-dark">
+                        {user.username}
+                      </p>
+                      <p className="text-sm text-brown">
+                        {user.role === "MASTER"
+                          ? "Master access"
+                          : "Standard access"}
+                      </p>
+                    </div>
 
-                {user.role === "USER" ? (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveUser(user)}
-                    className="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-700 transition hover:bg-red-50"
-                  >
-                    Remove
-                  </button>
-                ) : (
-                  <span className="text-xs font-medium uppercase tracking-wide text-brown">
-                    Protected
-                  </span>
-                )}
+                    <div>
+                      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-brown">
+                        Password
+                      </p>
+                      <StoredPasswordCell
+                        userId={user.id}
+                        password={user.password}
+                        onPasswordUpdated={loadUsers}
+                      />
+                    </div>
+                  </div>
+
+                  {user.role === "USER" ? (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveUser(user)}
+                      className="shrink-0 rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-700 transition hover:bg-red-50"
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-brown">
+                      Protected
+                    </span>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

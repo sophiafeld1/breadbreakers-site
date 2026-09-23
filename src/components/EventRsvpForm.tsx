@@ -14,6 +14,7 @@ type FormState = {
   firstName: string;
   lastName: string;
   email: string;
+  guestCount: string;
   phone: string;
   dietaryNotes: string;
   firstTime: "" | "Yes" | "No";
@@ -42,6 +43,7 @@ const initialFormState: FormState = {
   firstName: "",
   lastName: "",
   email: "",
+  guestCount: "0",
   phone: "",
   dietaryNotes: "",
   firstTime: "",
@@ -83,6 +85,7 @@ export default function EventRsvpForm({
           eventSlug,
           formName,
           ...form,
+          guestCount: Math.max(0, Number(form.guestCount) || 0),
         }),
       });
 
@@ -162,6 +165,22 @@ export default function EventRsvpForm({
             onChange={(event) => updateField("email", event.target.value)}
             className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
           />
+        </label>
+
+        <label className="grid gap-2 text-sm text-brown-dark">
+          <span>How many guests are you bringing?</span>
+          <input
+            type="number"
+            name="guestCount"
+            min={0}
+            max={20}
+            value={form.guestCount}
+            onChange={(event) => updateField("guestCount", event.target.value)}
+            className="w-full max-w-[8rem] rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
+          />
+          <span className="text-xs text-brown">
+            Not including yourself. We use this for a dinner headcount.
+          </span>
         </label>
 
         <label className="flex items-start gap-3 text-sm text-brown-dark">
