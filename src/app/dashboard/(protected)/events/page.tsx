@@ -14,11 +14,21 @@ export default async function DashboardEventsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-brown-dark">Events</h2>
-        <p className="mt-1 text-brown">
-          RSVP headcounts by chapter. Reston is the only chapter for now.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-brown-dark">Events</h2>
+          <p className="mt-1 text-brown">
+            Manage Reston events and RSVP headcounts. Changes update the public
+            site immediately.
+          </p>
+        </div>
+
+        <Link
+          href="/dashboard/events/new"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-cream transition hover:opacity-90"
+        >
+          Add event
+        </Link>
       </div>
 
       <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brown/10">
@@ -26,8 +36,11 @@ export default async function DashboardEventsPage() {
 
         {events.length === 0 ? (
           <p className="mt-4 text-sm text-brown">
-            No events yet. Run <code className="text-brown-dark">npm run db:seed</code>{" "}
-            to load events.
+            No events yet.{" "}
+            <Link href="/dashboard/events/new" className="text-brand hover:underline">
+              Add your first event
+            </Link>
+            .
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-brown/10">
@@ -44,7 +57,7 @@ export default async function DashboardEventsPage() {
                     ) : null}
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-3">
                     <div className="text-right">
                       <p className="text-2xl font-semibold text-brand">
                         {event.headcount}
@@ -56,9 +69,16 @@ export default async function DashboardEventsPage() {
 
                     <Link
                       href={`/dashboard/events/${event.slug}`}
-                      className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-cream transition hover:opacity-90"
+                      className="rounded-lg border border-brown/20 px-4 py-2 text-sm font-medium text-brown-dark transition hover:bg-brown/5"
                     >
                       View RSVPs
+                    </Link>
+
+                    <Link
+                      href={`/dashboard/events/${event.slug}/edit`}
+                      className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-cream transition hover:opacity-90"
+                    >
+                      Edit
                     </Link>
                   </div>
                 </div>

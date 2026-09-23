@@ -106,7 +106,6 @@ export default function EventCard({ event }: EventCardProps) {
             eventTitle={event.title}
             eventSlug={event.slug}
             formName={event.formName}
-            variant={event.formVariant}
           />
         </div>
       </div>

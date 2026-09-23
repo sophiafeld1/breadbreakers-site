@@ -1,6 +1,15 @@
-import type { Event as PrismaEvent } from "@/generated/prisma/client";
+import {
+  EventFormVariant as PrismaEventFormVariant,
+  type Event as PrismaEvent,
+} from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import type { Event, EventFormVariant } from "@/lib/events";
+import {
+  editorValuesToCalendarFields,
+  parseEventEditorPayload,
+  textToDescription,
+  type EventEditorValues,
+} from "@/lib/event-editor";
 
 export function rsvpHeadcount(guestCount: number): number {
   return 1 + guestCount;
@@ -122,6 +131,64 @@ export async function getEventWithRsvps(slug: string) {
       headcount: rsvpHeadcount(rsvp.guestCount),
     })),
   };
+}
+
+function editorValuesToDbData(values: EventEditorValues) {
+  const description = textToDescription(values.descriptionText);
+  const { calendarStart, calendarEnd } = editorValuesToCalendarFields(values);
+
+  return {
+    slug: values.slug,
+    chapter: values.chapter,
+    title: values.title,
+    month: values.month,
+    day: values.day,
+    dateLabel: values.dateLabel,
+    timeLabel: values.timeLabel,
+    venueName: values.venueName || null,
+    mapQuery: values.mapQuery || null,
+    googleCalendarUrl: values.googleCalendarUrl || null,
+    image: values.image,
+    imageAlt: values.imageAlt,
+    isUpcoming: values.isUpcoming,
+    formName: values.formName,
+    formVariant: PrismaEventFormVariant.standard,
+    calendarStart: calendarStart || null,
+    calendarEnd: calendarEnd || null,
+    description: description.length > 0 ? description : undefined,
+  };
+}
+
+export async function createEvent(input: Partial<EventEditorValues>) {
+  const { data, error } = parseEventEditorPayload(input);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return prisma.event.create({
+    data: editorValuesToDbData(data),
+  });
+}
+
+export async function updateEvent(
+  currentSlug: string,
+  input: Partial<EventEditorValues>,
+) {
+  const { data, error } = parseEventEditorPayload(input);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return prisma.event.update({
+    where: { slug: currentSlug },
+    data: editorValuesToDbData(data),
+  });
+}
+
+export async function deleteEvent(slug: string) {
+  await prisma.event.delete({ where: { slug } });
 }
 
 export async function createRsvp(input: {

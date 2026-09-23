@@ -30,9 +30,15 @@ export default async function DashboardEventDetailPage({
         >
           ← Back to events
         </Link>
-        <h2 className="mt-2 text-xl font-semibold text-brown-dark">
-          {event.title}
-        </h2>
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <h2 className="text-xl font-semibold text-brown-dark">{event.title}</h2>
+          <Link
+            href={`/dashboard/events/${slug}/edit`}
+            className="rounded-lg border border-brown/20 px-3 py-1.5 text-sm font-medium text-brown-dark transition hover:bg-brown/5"
+          >
+            Edit event
+          </Link>
+        </div>
         <p className="mt-1 text-brown">
           {event.dateLabel} · {event.timeLabel}
         </p>

@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { EventFormVariant } from "@/lib/events";
 
 type EventRsvpFormProps = {
   eventTitle: string;
   eventSlug: string;
   formName: string;
-  variant: EventFormVariant;
 };
 
 type FormState = {
@@ -22,22 +20,13 @@ type FormState = {
   mailingList: boolean;
 };
 
-const hearAboutOptions = {
-  standard: [
-    "Social Media",
-    "Word of Mouth",
-    "Event or Conference",
-    "meetup.com",
-    "Other",
-  ],
-  extended: [
-    "Social Media",
-    "Word of Mouth",
-    "Event or Conference",
-    "Meet-up",
-    "Other",
-  ],
-} as const;
+const hearAboutOptions = [
+  "Social Media",
+  "Word of Mouth",
+  "Event or Conference",
+  "meetup.com",
+  "Other",
+] as const;
 
 const initialFormState: FormState = {
   firstName: "",
@@ -55,17 +44,12 @@ export default function EventRsvpForm({
   eventTitle,
   eventSlug,
   formName,
-  variant,
 }: EventRsvpFormProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
     "idle",
   );
   const [message, setMessage] = useState("");
-
-  const options = variant === "extended" ? hearAboutOptions.extended : hearAboutOptions.standard;
-  const hearAboutLabel =
-    variant === "extended" ? "Dropdown" : "How did you hear about us?";
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -168,6 +152,17 @@ export default function EventRsvpForm({
         </label>
 
         <label className="grid gap-2 text-sm text-brown-dark">
+          <span>Phone (if you want text updates)</span>
+          <input
+            type="tel"
+            name="phone"
+            value={form.phone}
+            onChange={(event) => updateField("phone", event.target.value)}
+            className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
+          />
+        </label>
+
+        <label className="grid gap-2 text-sm text-brown-dark">
           <span>How many guests are you bringing?</span>
           <input
             type="number"
@@ -183,6 +178,17 @@ export default function EventRsvpForm({
           </span>
         </label>
 
+        <label className="grid gap-2 text-sm text-brown-dark">
+          <span>Dietary restrictions / accessibility notes</span>
+          <textarea
+            name="dietaryNotes"
+            rows={4}
+            value={form.dietaryNotes}
+            onChange={(event) => updateField("dietaryNotes", event.target.value)}
+            className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
+          />
+        </label>
+
         <label className="flex items-start gap-3 text-sm text-brown-dark">
           <input
             type="checkbox"
@@ -193,34 +199,6 @@ export default function EventRsvpForm({
           />
           <span>Sign up for news and updates</span>
         </label>
-
-        {variant === "extended" && (
-          <>
-            <label className="grid gap-2 text-sm text-brown-dark">
-              <span>Phone (if you want get text updates)</span>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={(event) => updateField("phone", event.target.value)}
-                className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
-              />
-            </label>
-
-            <label className="grid gap-2 text-sm text-brown-dark">
-              <span>Dietary Restrictions/Accessibility Notes</span>
-              <textarea
-                name="dietaryNotes"
-                rows={4}
-                value={form.dietaryNotes}
-                onChange={(event) =>
-                  updateField("dietaryNotes", event.target.value)
-                }
-                className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
-              />
-            </label>
-          </>
-        )}
 
         <fieldset className="grid gap-3">
           <legend className="text-sm text-brown-dark">
@@ -253,7 +231,7 @@ export default function EventRsvpForm({
 
         {form.firstTime === "Yes" && (
           <label className="grid gap-2 text-sm text-brown-dark">
-            <span>{hearAboutLabel}</span>
+            <span>How did you hear about us?</span>
             <select
               name="hearAbout"
               value={form.hearAbout}
@@ -261,7 +239,7 @@ export default function EventRsvpForm({
               className="rounded-md border border-brown/25 px-3 py-2 text-base text-brown-dark outline-none focus:border-brand"
             >
               <option value="">Select an option</option>
-              {options.map((option) => (
+              {hearAboutOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
