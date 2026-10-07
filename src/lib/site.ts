@@ -5,6 +5,7 @@ export const images = {
   eventPhoto: "/DSC00573.jpg",
   eventPhotoAlt: "/unsplash-image.jpg",
   hostYourOwnPhoto: "/DSC00543.JPG",
+  trainCommunityPhoto: "/IMG_20260430_154844.jpg",
   facebookIcon: "/facebook-icon.png",
   meetupLogo: "/meetup-logo.png",
 };

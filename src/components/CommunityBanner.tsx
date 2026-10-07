@@ -26,7 +26,7 @@ export default function CommunityBanner() {
             >
               Restoration United Methodist Church
             </Link>{" "}
-            in Reston, VA, is a religiously inclusive community. We are a
+            in Reston, VA, is a religiously pluralistic community. We are a
             collaboration between people of all faiths and stripes.
           </p>
           <p className="mt-6 text-lg leading-relaxed md:text-xl">

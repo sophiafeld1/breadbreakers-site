@@ -22,12 +22,12 @@ const ingredients = [
   {
     title: "Compassion",
     description:
-      "BreadBreakers is about opening hearts. Going beyond polite respect and practicing Agape Love— unconditional, nontransactional, indiscriminate between friend and foe—until it is no longer a discipline, but an instinct.",
+      "BreadBreakers is about opening hearts. Going beyond polite respect and practicing Agape Love — unconditional, nontransactional, indiscriminate between friend and foe—until it is no longer a discipline, but an instinct.",
   },
   {
     title: "The Personal",
     description:
-      "Without this, our conversations \"could've been an email\" (or a book, or a news article, or a...) We're seeking deeper understanding of people as well as substance. Not just what you believe— why you believe it, how that connects with your story, identity, and decisions.",
+      "Without this, our conversations \"could've been an email\" (or a book, or a news article, or a...) We're seeking deeper understanding of people as well as substance. Not just what you believe — why you believe it, how that connects with your story, identity, and decisions.",
   },
   {
     title: "Extravagant Grace",
@@ -72,11 +72,12 @@ export default function AboutUsPage() {
               Here&apos;s how it works:
             </h3>
             <blockquote className="mt-4 border-l-4 border-cream pl-4 text-lg leading-relaxed md:text-xl">
-              For just two hours, multiple tables of people set aside the need to
-              &quot;win&quot; and instead focus on sharing, listening, and
-              connecting. Guided by experienced table hosts, we&apos;ll tell our
-              stories, try to understand each other, and practice being in
-              community with those with different views or backgrounds.
+              For just two hours, you and seven others around your table simply
+              break bread and practice seeing one another. We share, listen, and
+              connect, and when disagreements arise, we approach them from the
+              starting point of curiosity. Guided by experienced table hosts,
+              we&apos;ll tell our stories and just enjoy being in community with
+              those of different views and backgrounds.
             </blockquote>
           </div>
         </div>

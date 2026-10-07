@@ -10,21 +10,21 @@ const processSteps = [
   {
     title: "Introductory Meeting",
     description:
-      "We'll talk on Zoom (or in-person if possible) and talk about BreadBreakers, the process of starting a community, your hopes and goals, your local context, how The Bakery will support you, and the expectations for each BreadBreakers community. If you're able to travel to a planned BreadBreakers event, you can even come see it for yourself!",
+      "We'll talk on Zoom (or in-person if possible) and talk about BreadBreakers, the process of starting a community, your hopes and goals, your local context, how we will support you, and the expectations for each BreadBreakers community. If you're able to travel to a planned BreadBreakers event, you can even come see it for yourself!",
     background: "hsl(213, 32%, 88%)",
     lightText: false,
   },
   {
     title: "Affirmation of Intent",
     description:
-      "A simple signed form confirming that you and (if applicable) your congregation want to start a BreadBreakers community and agree to our community expectations.",
+      "A simple signed form confirming that you and (if applicable) your congregation or organization want to start a BreadBreakers community and agree to our community expectations.",
     background: "hsl(212, 31%, 80%)",
     lightText: false,
   },
   {
-    title: "Team-Building and Training",
+    title: "Team-Forming and Training",
     description:
-      "Recruiting the people who'll launch the community alongside you (within and even beyond your congregation), then learning the BreadBreakers method and table host techniques. We'll give you advice and support and make sure you get the training you need. Avenues include online meetings, in-person trainings, and you attending BreadBreakers events to learn by doing.",
+      "Recruiting the people who'll launch the community alongside you (within and even beyond your congregation/organization), then learning the BreadBreakers method and table host techniques. We'll give you advice and support and make sure you get the training you need. Avenues include online meetings, in-person trainings, and you attending BreadBreakers events to learn by doing.",
     background: "hsl(212, 31%, 68%)",
     lightText: false,
   },
@@ -171,10 +171,11 @@ export default function HostYourOwn() {
           >
             <p className="hyo-sell">
               Ready to build something lasting? We&apos;ll train and support you
-              to start a BreadBreakers chapter of your own.
+              to start a BreadBreakers community of your own.
             </p>
             <p className="hyo-subhead mb-0">
-              The full process is below — the journey we&apos;ll walk with you
+              The full process is below — It&apos;s a journey we&apos;ll walk
+              with you
             </p>
           </div>
         </div>
@@ -202,7 +203,14 @@ export default function HostYourOwn() {
                   Need support with something different or just want to talk?
                 </h2>
                 <h2 className="text-xl font-semibold leading-relaxed text-[#f8f5f5] md:text-2xl">
-                  We&apos;re here, and we&apos;d love to be connected with you.
+                  We&apos;re here,{" "}
+                  <a
+                    href={links.email}
+                    className="underline decoration-2 underline-offset-4 hover:opacity-80"
+                  >
+                    and we&apos;d love to be connected with you
+                  </a>
+                  .
                 </h2>
               </div>
             </div>

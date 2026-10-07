@@ -33,6 +33,14 @@ const impactTiers = [
     image: images.aboutMissionPhoto,
     imageAlt: "BreadBreakers community meal and conversation",
   },
+  {
+    amount: 500,
+    title: "Train a new community",
+    description:
+      "Equips us to travel and teach others around the country to create BreadBreakers communities in their own neighborhoods.",
+    image: images.trainCommunityPhoto,
+    imageAlt: "BreadBreakers community gathering around tables",
+  },
 ];
 
 export default function DonatePage() {
@@ -67,8 +75,16 @@ export default function DonatePage() {
         <div className="mx-auto max-w-3xl">
           <div className="space-y-5 text-lg leading-relaxed text-brown-dark">
             <p>
+              Join us in the movement to rebuild the town square, one table at a
+              time. Your gifts equip us to not only keep growing the flagship
+              BreadBreakers community in Reston, VA, but to teach others around
+              the country to do the same in their own neighborhoods. Together, we
+              can create spaces of connection and compassion in cities, towns,
+              and villages everywhere.
+            </p>
+            <p>
               BreadBreakers, an initiative by Restoration United Methodist
-              Church in Reston, VA, is a religiously inclusive community. We are
+              Church in Reston, VA, is a religiously pluralistic community. We are
               a collaboration between people of all faiths and stripes. Our
               leadership, volunteer team, and community include people who
               attend Restoration and people who don&apos;t.
@@ -102,7 +118,7 @@ export default function DonatePage() {
             Tap a card to donate that amount through Pushpay
           </p>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2">
             {impactTiers.map((tier) => (
               <a
                 key={tier.amount}
@@ -118,7 +134,7 @@ export default function DonatePage() {
                     alt={tier.imageAlt}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand/60 to-transparent" />
                   <div className="absolute bottom-4 left-4 rounded-full bg-white px-4 py-2 shadow-md">

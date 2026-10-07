@@ -4,7 +4,7 @@ import HostYourOwn from "@/components/HostYourOwn";
 export const metadata: Metadata = {
   title: "Host Your Own | BreadBreakers",
   description:
-    "Two ways to bring BreadBreakers to your community — we come to you, or we train you to start a chapter.",
+    "Two ways to bring BreadBreakers to your community — we come to you, or we train you to start a community.",
 };
 
 export default function BringItToYourCommunityPage() {

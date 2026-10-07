@@ -54,6 +54,12 @@ export default function NavLinks() {
           </Link>
         );
       })}
+      <Link
+        href="/events"
+        className="rounded-full bg-[#c0532a] px-4 py-2 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#a8461f]"
+      >
+        Sign Up
+      </Link>
     </nav>
   );
 }
