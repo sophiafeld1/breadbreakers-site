@@ -20,6 +20,7 @@
 # production
 /build
 /public/uploads/
+/public/breadbreakers hero video3.mp4
 
 # misc
 .DS_Store

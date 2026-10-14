@@ -1,5 +1,6 @@
 export const images = {
   logo: "/breadbreakersLogo.jpg",
+  heroVideo: "/breadbreakers-hero.mp4",
   communityPhoto: "/community-photo.jpg",
   aboutMissionPhoto: "/about-mission.jpg",
   eventPhoto: "/DSC00573.jpg",
