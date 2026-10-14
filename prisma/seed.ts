@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { scheduleToCalendarFields } from "../src/lib/event-datetime";
+import { blogPosts } from "../src/lib/substack";
 
 config({ path: ".env.local" });
 config({ path: ".env" });
@@ -153,6 +154,21 @@ async function main() {
   console.log(
     `Seeded ${seedEvents.length} Reston events: ${seedEvents.map((event) => event.dateLabel).join("; ")}`,
   );
+
+  for (const [index, post] of blogPosts.entries()) {
+    await prisma.blogPost.upsert({
+      where: { url: post.url },
+      update: {},
+      create: {
+        url: post.url,
+        title: post.title,
+        description: post.description,
+        createdAt: new Date(Date.now() - index * 1000),
+      },
+    });
+  }
+
+  console.log(`Seeded ${blogPosts.length} blog posts.`);
 
   await prisma.$disconnect();
 }

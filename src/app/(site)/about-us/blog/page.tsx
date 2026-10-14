@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import SubstackEmbeds from "@/components/SubstackEmbeds";
-import { blogPosts } from "@/lib/substack";
+import { listPublicBlogPosts } from "@/lib/blogs-db";
 
 export const metadata: Metadata = {
   title: "Blog | BreadBreakers",
 };
 
-export default function BlogPage() {
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+  const posts = await listPublicBlogPosts();
+
   return (
     <section className="bg-sand px-6 py-12 md:py-16">
       <div className="mx-auto max-w-5xl">
@@ -19,7 +23,13 @@ export default function BlogPage() {
           </p>
         </div>
 
-        <SubstackEmbeds posts={blogPosts} layout="grid" />
+        {posts.length === 0 ? (
+          <p className="text-center text-brown">
+            New posts will appear here soon.
+          </p>
+        ) : (
+          <SubstackEmbeds posts={posts} layout="grid" />
+        )}
       </div>
     </section>
   );

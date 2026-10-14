@@ -16,7 +16,7 @@ export default async function DashboardPage() {
         </h2>
         <p className="mt-2 text-brown">
           {isMaster
-            ? "You have master access. View event RSVPs, manage users, and track dinner headcounts."
+            ? "You have master access. View event RSVPs, manage the blog, manage users, and track dinner headcounts."
             : "You are signed in to the BreadBreakers internal dashboard."}
         </p>
 
@@ -27,6 +27,12 @@ export default async function DashboardPage() {
               className="rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-cream transition hover:opacity-90"
             >
               View Reston events
+            </Link>
+            <Link
+              href="/dashboard/blogs"
+              className="rounded-lg border border-brown/20 px-4 py-2.5 text-sm font-medium text-brown-dark transition hover:bg-brown/5"
+            >
+              Manage blog
             </Link>
             <Link
               href="/dashboard/users"

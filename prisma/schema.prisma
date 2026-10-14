@@ -68,3 +68,12 @@ model Rsvp {
 
   @@index([eventId])
 }
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  description String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
