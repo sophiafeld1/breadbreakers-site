@@ -2,6 +2,7 @@ export const images = {
   logo: "/breadbreakersLogo.jpg",
   heroVideo: "/breadbreakers-hero.mp4",
   communityPhoto: "/community-photo.jpg",
+  spreadTheWordPhoto: "/DSC09978.jpg",
   aboutMissionPhoto: "/about-mission.jpg",
   eventPhoto: "/DSC00573.jpg",
   eventPhotoAlt: "/unsplash-image.jpg",

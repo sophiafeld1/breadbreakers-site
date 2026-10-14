@@ -22,8 +22,8 @@ const impactTiers = [
     title: "Spread the word",
     description:
       "Helps us maintain our website and outreach for a month, so new neighbors can find their way to the table.",
-    image: images.communityPhoto,
-    imageAlt: "BreadBreakers community gathered together",
+    image: images.spreadTheWordPhoto,
+    imageAlt: "Guests in conversation at a BreadBreakers dinner table",
   },
   {
     amount: 150,

@@ -8,37 +8,30 @@ type Tab = "come" | "train";
 
 const processSteps = [
   {
-    title: "Introductory Meeting",
+    title: "We Meet You",
     description:
-      "We'll talk on Zoom (or in-person if possible) and talk about BreadBreakers, the process of starting a community, your hopes and goals, your local context, how we will support you, and the expectations for each BreadBreakers community. If you're able to travel to a planned BreadBreakers event, you can even come see it for yourself!",
+      "We don't just want to equip you — we want to know you. What's your story, your local context, and how can we support you?",
     background: "hsl(213, 32%, 88%)",
     lightText: false,
   },
   {
-    title: "Affirmation of Intent",
+    title: "We Help You Build a Team",
     description:
-      "A simple signed form confirming that you and (if applicable) your congregation or organization want to start a BreadBreakers community and agree to our community expectations.",
+      "It's hard to build a community alone! We'll help you identify and recruit the people who'll build it with you.",
     background: "hsl(212, 31%, 80%)",
     lightText: false,
   },
   {
-    title: "Team-Forming and Training",
+    title: "We Train You",
     description:
-      "Recruiting the people who'll launch the community alongside you (within and even beyond your congregation/organization), then learning the BreadBreakers method and table host techniques. We'll give you advice and support and make sure you get the training you need. Avenues include online meetings, in-person trainings, and you attending BreadBreakers events to learn by doing.",
+      "How do you facilitate productive dialogue and create a space of intentional compassion? We'll teach you our method, which we've refined over several years and taught to dozens of table hosts.",
     background: "hsl(212, 31%, 68%)",
     lightText: false,
   },
   {
-    title: "Practicing, Experimenting, and Listening",
+    title: "We Coach You — Through Launch and Beyond",
     description:
-      "Every community's story is different, but those of us who started the first BreadBreakers community found that trying it out, practicing, and learning by doing it among our congregation was a great way to start. This \"pre-launch\" time is also an opportune time for listening in your local neighborhoods, learning about your community needs, understanding your community context, and seeking out partners.",
-    background: "hsl(213, 31%, 60%)",
-    lightText: true,
-  },
-  {
-    title: "Launch",
-    description:
-      "Inviting people from the wider community and starting up a regular cadence of gatherings. You can start small, big, in whatever format and way works for your context. And as you learn, experiment, and grow, we'll be there at every step to walk alongside you.",
+      "You make the community yours, and we'll be there to support you as you grow — whether that's with mentorship, how-to guides, or just an encouraging text. You're not just joining a movement — you're joining a community of communities, with people you can lean on all across the country.",
     background: "hsl(214, 34%, 48%)",
     lightText: true,
   },
@@ -82,7 +75,7 @@ export default function HostYourOwn() {
               aria-controls="hyo-panel-come"
               onClick={() => selectTab("come")}
             >
-              We come to you &amp; do it
+              We come to you and do it
             </button>
             <button
               type="button"
@@ -173,10 +166,6 @@ export default function HostYourOwn() {
               Ready to build something lasting? We&apos;ll train and support you
               to start a BreadBreakers community of your own.
             </p>
-            <p className="hyo-subhead mb-0">
-              The full process is below — It&apos;s a journey we&apos;ll walk
-              with you
-            </p>
           </div>
         </div>
       </section>
@@ -196,30 +185,25 @@ export default function HostYourOwn() {
               </div>
               <div className="flex flex-col justify-center space-y-4 bg-brand px-6 py-10 text-center md:px-10 md:text-left">
                 <h2 className="text-xl font-semibold leading-relaxed text-[#f8f5f5] md:text-2xl">
-                  Want to help spread the BreadBreakers movement to a new
-                  community?
+                  Do it with your faith congregation, your club, or just a few
+                  neighbors
                 </h2>
                 <h2 className="text-xl font-semibold leading-relaxed text-[#f8f5f5] md:text-2xl">
-                  Need support with something different or just want to talk?
-                </h2>
-                <h2 className="text-xl font-semibold leading-relaxed text-[#f8f5f5] md:text-2xl">
-                  We&apos;re here,{" "}
-                  <a
-                    href={links.email}
-                    className="underline decoration-2 underline-offset-4 hover:opacity-80"
-                  >
-                    and we&apos;d love to be connected with you
-                  </a>
-                  .
+                  You build the community — we coach you every step of the way
                 </h2>
               </div>
+            </div>
+            <div className="hyo-cta mt-8">
+              <a href={links.email}>
+                Contact us here to learn more or get started
+              </a>
             </div>
           </section>
 
           <section className="bg-white px-6 pb-16 md:pb-20">
             <div className="mx-auto max-w-3xl">
               <h2 className="mb-8 bg-[#c0532a] py-6 text-center text-3xl font-bold text-white md:text-4xl">
-                The Process
+                The Process in a Nutshell
               </h2>
 
               <div className="space-y-5">
