@@ -193,10 +193,21 @@ export default function HostYourOwn() {
                 </h2>
               </div>
             </div>
-            <div className="hyo-cta mt-8">
-              <a href={links.email}>
-                Contact us here to learn more or get started
-              </a>
+            <div className="mt-8 text-center">
+              <div className="hyo-cta">
+                <a href={links.email}>
+                  Contact us here to learn more or get started
+                </a>
+              </div>
+              <p className="mt-4 text-base text-brown">
+                Email us at{" "}
+                <a
+                  href={links.email}
+                  className="font-semibold text-brand underline decoration-2 underline-offset-4 hover:opacity-80"
+                >
+                  breadbreakersinfo@gmail.com
+                </a>
+              </p>
             </div>
           </section>
 

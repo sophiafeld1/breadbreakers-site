@@ -61,7 +61,7 @@ export default function DonatePage() {
             Support the movement
           </p>
           <h1 className="max-w-3xl text-4xl font-bold leading-tight text-cream md:text-5xl">
-            Your gift keeps the dinner table conversation going
+            Your gift keeps the dinner conversation going
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-cream/95 md:text-xl">
             <span className="font-bold text-white">$12</span> provides one
