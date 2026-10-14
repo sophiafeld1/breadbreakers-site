@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type EventRsvpFormProps = {
   eventTitle: string;
@@ -46,10 +46,20 @@ export default function EventRsvpForm({
   formName,
 }: EventRsvpFormProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
+  const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
     "idle",
   );
   const [message, setMessage] = useState("");
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [open]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -108,9 +118,22 @@ export default function EventRsvpForm({
   }
 
   return (
+    <div ref={formRef}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={`rsvp-form-${eventSlug}`}
+        onClick={() => setOpen((current) => !current)}
+        className="rounded-full bg-[#c0532a] px-8 py-3 text-base font-bold text-white shadow-md shadow-[#c0532a]/30 transition-all hover:bg-[#a8461f] hover:shadow-lg"
+      >
+        {open ? "Hide form" : "Sign Up"}
+      </button>
+
+      {open && (
     <form
+      id={`rsvp-form-${eventSlug}`}
       onSubmit={handleSubmit}
-      className="rounded-2xl bg-white p-6 shadow-md md:p-8"
+      className="mt-6 rounded-2xl bg-white p-6 shadow-md md:p-8"
     >
       <div className="grid gap-5">
         <div className="grid gap-5 sm:grid-cols-2">
@@ -268,5 +291,7 @@ export default function EventRsvpForm({
         </div>
       </div>
     </form>
+      )}
+    </div>
   );
 }

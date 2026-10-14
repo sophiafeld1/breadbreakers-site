@@ -1,39 +1,84 @@
 import { config } from "dotenv";
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
+import { scheduleToCalendarFields } from "../src/lib/event-datetime";
 
 config({ path: ".env.local" });
 config({ path: ".env" });
 
 const MASTER_USERNAME = "master-access";
 
-const seedEvent = {
-  slug: "july-30-2026",
-  chapter: "Reston",
-  title: "BreadBreakers Community Dinner",
-  month: "Jul",
-  day: "30",
-  dateLabel: "Thursday, July 30, 2026",
-  timeLabel: "6:30 PM – 8:30 PM",
-  venueName: "Reston Community Center Lake Anne",
-  mapQuery:
-    "1609-A Washington Plaza North Reston, Virginia, 20190 United States",
-  googleCalendarUrl:
-    "http://www.google.com/calendar/event?action=TEMPLATE&text=BreadBreakers%20Community%20Dinner&dates=20260730T223000Z/20260731T003000Z&location=1609-A%20Washington%20Plaza%20North%2C%20Reston%2C%20Virginia%2C%2020190%2C%20United%20States",
-  image: "/DSC00573.jpg",
-  imageAlt: "BreadBreakers Community Dinner",
-  isUpcoming: true,
-  formName: "RSVP BB 07/30",
-  formVariant: "standard" as const,
-  calendarStart: "20260730T223000Z",
-  calendarEnd: "20260731T003000Z",
-  description: [
-    "This dinner in particular will be very special as we celebrate America's 250th birthday. How better to honor a semiquincentennial of democracy that spending an evening practicing it?",
-    "At this dinner, participants will get to choose between three different topics, including some current events. Topics range from the political, to the \"slice of life\", to the spiritual, to the philosophical, to the off-the-wall - but no matter which table you choose to sit at, you can be sure it'll be like no dinner conversation you've had before! You can also suggest a topic by emailing us at BreadBreakersInfo@gmail.com.",
-    "Food will be provided for free. We'll have vegetarian and gluten-free options available. If you have any additional dietary restrictions (Celiac Disease, vegan, etc.) please let us know at BreadBreakersInfo@gmail.com so that we can implement the appropriate food handling procedures.",
-    "Join us, invite a friend, and be a part of the movement to mend our fractured society and normalize a better way of talking with one another.",
-  ],
-};
+const sharedDescription = [
+  "In a time of division and isolation, come be part of the community that's rebuilding the town square, one table at a time.",
+  'At this dinner, participants will get to choose between three different topics, including some current events. Topics range from the political, to the "slice of life", to the spiritual, to the philosophical, to the off-the-wall - but no matter which table you choose to sit at, you can be sure it\'ll be like no dinner conversation you\'ve had before! You can also suggest a topic by emailing us at BreadBreakersInfo@gmail.com.',
+  "Food will be provided for free. We'll have vegetarian and gluten-free options available. If you have any additional dietary restrictions (Celiac Disease, vegan, etc.) please let us know at BreadBreakersInfo@gmail.com so that we can implement the appropriate food handling procedures.",
+  "Join us, invite a friend, and be a part of the movement to mend our fractured society and normalize a better way of talking with one another.",
+];
+
+const venueName = "Reston Community Center Lake Anne";
+const mapQuery =
+  "1609-A Washington Plaza North Reston, Virginia, 20190 United States";
+const googleLocation =
+  "1609-A Washington Plaza North, Reston, Virginia, 20190, United States";
+
+function buildEvent(input: {
+  slug: string;
+  month: string;
+  day: string;
+  dateLabel: string;
+  formName: string;
+}) {
+  const timeLabel = "6:30 PM – 8:30 PM";
+  const { calendarStart, calendarEnd } = scheduleToCalendarFields({
+    dateLabel: input.dateLabel,
+    timeLabel,
+  });
+
+  return {
+    slug: input.slug,
+    chapter: "Reston",
+    title: "BreadBreakers Community Dinner",
+    month: input.month,
+    day: input.day,
+    dateLabel: input.dateLabel,
+    timeLabel,
+    venueName,
+    mapQuery,
+    googleCalendarUrl: `http://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent("BreadBreakers Community Dinner")}&dates=${calendarStart}/${calendarEnd}&location=${encodeURIComponent(googleLocation)}`,
+    image: "/DSC00573.jpg",
+    imageAlt: "BreadBreakers Community Dinner",
+    isUpcoming: true,
+    formName: input.formName,
+    formVariant: "standard" as const,
+    calendarStart,
+    calendarEnd,
+    description: sharedDescription,
+  };
+}
+
+export const seedEvents = [
+  buildEvent({
+    slug: "october-27-2026",
+    month: "Oct",
+    day: "27",
+    dateLabel: "Tuesday, October 27, 2026",
+    formName: "RSVP BB 10/27",
+  }),
+  buildEvent({
+    slug: "november-19-2026",
+    month: "Nov",
+    day: "19",
+    dateLabel: "Thursday, November 19, 2026",
+    formName: "RSVP BB 11/19",
+  }),
+  buildEvent({
+    slug: "december-17-2026",
+    month: "Dec",
+    day: "17",
+    dateLabel: "Thursday, December 17, 2026",
+    formName: "RSVP BB 12/17",
+  }),
+];
 
 async function main() {
   const { UserRole, EventFormVariant } = await import(
@@ -87,19 +132,27 @@ async function main() {
     }
   }
 
-  await prisma.event.upsert({
-    where: { slug: seedEvent.slug },
-    update: {
-      ...seedEvent,
-      formVariant: EventFormVariant.standard,
-    },
-    create: {
-      ...seedEvent,
-      formVariant: EventFormVariant.standard,
-    },
+  await prisma.event.deleteMany({
+    where: { slug: { in: ["july-30-2026", "july-30"] } },
   });
 
-  console.log(`Seeded 1 Reston event: ${seedEvent.dateLabel}`);
+  for (const event of seedEvents) {
+    await prisma.event.upsert({
+      where: { slug: event.slug },
+      update: {
+        ...event,
+        formVariant: EventFormVariant.standard,
+      },
+      create: {
+        ...event,
+        formVariant: EventFormVariant.standard,
+      },
+    });
+  }
+
+  console.log(
+    `Seeded ${seedEvents.length} Reston events: ${seedEvents.map((event) => event.dateLabel).join("; ")}`,
+  );
 
   await prisma.$disconnect();
 }

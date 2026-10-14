@@ -190,7 +190,7 @@ export default function EventEditorForm({
             />
             <span className="text-xs text-brown">
               A short name for this event&apos;s web address, like{" "}
-              {values.slug || "july-30-2026"}.
+              {values.slug || "october-27-2026"}.
             </span>
           </label>
 
