@@ -102,11 +102,7 @@ export default function EventCard({ event }: EventCardProps) {
         )}
 
         <div className="mt-8">
-          <EventRsvpForm
-            eventTitle={event.title}
-            eventSlug={event.slug}
-            formName={event.formName}
-          />
+          <EventRsvpForm eventSlug={event.slug} />
         </div>
       </div>
     </article>
